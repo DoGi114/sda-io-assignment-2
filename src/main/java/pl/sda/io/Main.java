@@ -57,6 +57,7 @@ public class Main {
                         matcher = pattern.matcher(content);
                         if(matcher.matches()) {
                             System.out.println(path + " - " + matcher.group(1));
+                            
                             break;
                         }
                     }
