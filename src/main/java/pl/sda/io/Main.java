@@ -8,6 +8,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -18,10 +20,13 @@ public class Main {
         2. Poza wypisaniem nazw plików wypisz też ilość wystąpień tego słowa w danym pliku w formacie <nazwa>:<ilość wystąpień>
         3. Zamiast wypisywać na konsolę zapis rezultat do pliku
          */
+
         findGiveWordInFiles("coś");
+        findGivenWordAndWordAfter("coś");
     }
 
-    private static void findGiveWordInFiles(String givenWord){
+    private static void findGiveWordInFiles(String givenWord) {
+
         try {
             List<Path> filePaths = Files.list(Paths.get("my-files")).collect(Collectors.toList());
             for(Path path : filePaths){
@@ -31,6 +36,29 @@ public class Main {
                     if(content.contains(givenWord)){
                         System.out.println(path);
                         break;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void findGivenWordAndWordAfter(String givenWord){
+        try {
+            List<Path> filePaths = Files.list(Paths.get("my-files")).collect(Collectors.toList());
+            for(Path path : filePaths){
+                BufferedReader bufferedReader = Files.newBufferedReader(path);
+                String content;
+                Pattern pattern = Pattern.compile("(" + givenWord  + " +\\w+" + ")");
+                Matcher matcher;
+                while( ( content = bufferedReader.readLine() ) != null){
+                    if(content.contains(givenWord)){
+                        matcher = pattern.matcher(content);
+                        if(matcher.matches()) {
+                            System.out.println(path + " - " + matcher.group(1));
+                            break;
+                        }
                     }
                 }
             }
